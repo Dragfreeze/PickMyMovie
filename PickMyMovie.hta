@@ -40,30 +40,14 @@
 		Option Explicit
 		Dim fileCount, folderCount, xmlDoc, xmlFiltered, level, depth, VIDEO_EXT, IMAGE_EXT, videoList, timerID, searchPhrase, regexPattern
 		
-		'Const ROOT = "root"
-		'Const FOLDER = "FOLDER"
-		'Const FILE = "file"
-		'Const IMAGE_FILE = "image_file"
-		'Const VIDEO_FILE = "video_file"
-		'Const PONTER_WHITE = "<img alt='' src='data:image/gif;base64,R0lGODlhBwAJAIAAAP///wAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4zLWMwMTEgNjYuMTQ1NjYxLCAyMDEyLzAyLzA2LTE0OjU2OjI3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5RUJFRkVGNTY4NzUxMUUyQUM3MkMzNjY0NjNFMEZEOSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo5RUJFRkVGNjY4NzUxMUUyQUM3MkMzNjY0NjNFMEZEOSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjlFQkVGRUYzNjg3NTExRTJBQzcyQzM2NjQ2M0UwRkQ5IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjlFQkVGRUY0Njg3NTExRTJBQzcyQzM2NjQ2M0UwRkQ5Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAAAAAAAsAAAAAAcACQAAAgxEjoan2wmiXLTaWgAAOw==' />"
-		'Const PONTER_GREEN = "<img alt='' src='data:image/gif;base64,R0lGODlhBwAJAIAAAAD/AAAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4zLWMwMTEgNjYuMTQ1NjYxLCAyMDEyLzAyLzA2LTE0OjU2OjI3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo0OTQ3QUI5RTY4N0MxMUUyOEEyOUZDM0MwNTFBNjA2OCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo0OTQ3QUI5RjY4N0MxMUUyOEEyOUZDM0MwNTFBNjA2OCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjQ5NDdBQjlDNjg3QzExRTI4QTI5RkMzQzA1MUE2MDY4IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjQ5NDdBQjlENjg3QzExRTI4QTI5RkMzQzA1MUE2MDY4Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAAAAAAAsAAAAAAcACQAAAgxEjoan2wmiXLTaWgAAOw==' />"
-		'Const PONTER_BLUE = "<img alt='' src='data:image/gif;base64,R0lGODlhBwAJAIAAAACx/wAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4zLWMwMTEgNjYuMTQ1NjYxLCAyMDEyLzAyLzA2LTE0OjU2OjI3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo2NjkyMUQ5OTY4N0MxMUUyQkM1RkJBNDY1MkVBQjBCMCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo2NjkyMUQ5QTY4N0MxMUUyQkM1RkJBNDY1MkVBQjBCMCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjY2OTIxRDk3Njg3QzExRTJCQzVGQkE0NjUyRUFCMEIwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjY2OTIxRDk4Njg3QzExRTJCQzVGQkE0NjUyRUFCMEIwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAAAAAAAsAAAAAAcACQAAAgxEjoan2wmiXLTaWgAAOw==' />"
-		'Const PONTER_RED = "<img alt='' src='data:image/gif;base64,R0lGODlhBwAJAIAAALZFRQAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4zLWMwMTEgNjYuMTQ1NjYxLCAyMDEyLzAyLzA2LTE0OjU2OjI3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpBOTg1QkUyQTY4N0QxMUUyQjU3N0FBNUY3MjYyMkY2QyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpBOTg1QkUyQjY4N0QxMUUyQjU3N0FBNUY3MjYyMkY2QyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkE5ODVCRTI4Njg3RDExRTJCNTc3QUE1RjcyNjIyRjZDIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkE5ODVCRTI5Njg3RDExRTJCNTc3QUE1RjcyNjIyRjZDIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAAAAAAAsAAAAAAcACQAAAgxEjoan2wmiXLTaWgAAOw==' />"
-		
-		Const PONTER_WHITE = "-"
-		Const PONTER_GREEN = "-"
-		Const PONTER_BLUE = "-"
-		Const PONTER_RED = "-"
-		
 		VIDEO_EXT = Array("3g2"",""3gp","asf","asx","avi","flv","mov","mp4","mpg","rm","swf","vob","wmv")
 		IMAGE_EXT = Array("bmp","gif","jpg","jpeg","png","tga","tif","tiff")
 
-		
+'------------------------------------------------------------------------------------------------------------
 		
 		Sub Window_OnLoad
 			init 
 			paint xmlDoc
-			'cleanup
 		End Sub 
 
 '------------------------------------------------------------------------------------------------------------
@@ -73,31 +57,24 @@
 			Set xmlDoc = CreateObject("Microsoft.XMLDOM")
 			xmlDoc.setProperty "SelectionLanguage","XPath"
 			Set videoList = CreateObject("System.Collections.ArrayList")
-			
 			level = 0
 			folderCount = 0
 			fileCount = 0
 			regexPattern = "a^"
-			
 			strFolder = "."
 			Set objFSO = CreateObject("Scripting.FileSystemObject")
 			Set objFolder = objFSO.GetFolder(strFolder)
-			
 			Set xmlNode = xmlDoc.createElement("ROOT")
 			xmlNode.setAttribute "Name", displayName(objFolder.Path)
 			xmlNode.setAttribute "Path", objFolder.Path
 			xmlNode.setAttribute "Filter", "yes"
 			xmlDoc.appendChild xmlNode
-			
 			For Each objFile In objFolder.Files
 				level = level + 1
-				
 				writeToXML displayName(objFolder.Path), "FILE", objFile.Path, xmlDoc
-
 				level = level - 1
 				fileCount = fileCount + 1
 			Next
-			
 			ShowSubFolders objFolder, displayName(objFolder.Path)
 		End Sub
 
@@ -105,26 +82,19 @@
 	
 		Sub ShowSubFolders(objFolder, parentNodeName)
 			Dim objSubFolder, objFile
-			
 			level = level + 1
 			For Each objSubFolder In objFolder.SubFolders
-
 				writeToXML parentNodeName, "FOLDER", objSubFolder.Path, xmlDoc
-					
 				For Each objFile In objSubFolder.Files
 					level = level + 1
-					
 					writeToXML displayName(objSubFolder.Path), "FILE", objFile.Path, xmlDoc
-					
 					level = level - 1
 					fileCount = fileCount + 1
 				Next
-				
 				ShowSubFolders objSubFolder, displayName(objSubFolder.Path)
 				folderCount = folderCount + 1
 			Next
 			level = level - 1
-			
 		End Sub
 		
 '------------------------------------------------------------------------------------------------------------
@@ -138,31 +108,23 @@
 			xmlNode.setAttribute "Path", path
 			xmlNode.setAttribute "Filter", "yes"
 			parentNode.appendChild xmlNode
-		
 		End Sub
 
 '------------------------------------------------------------------------------------------------------------
 		
 		Function getCurrentNode(parentNodeName)
 			Dim index, xmlPath
-			
 			xmlPath = "//ROOT"
-			
-			'Msgbox "getCurrentNode- level is:" & level & " currentNode is:" & parentNodeName
 			For index = 2 To level
-				'Msgbox "A FOR-LOOP RUN"
 				xmlPath = xmlPath & "/FOLDER"
 			Next
-		
 			getCurrentNode = xmlPath & "[@Name=" & Chr(34) & parentNodeName & Chr(34) & "]"
-			
 		End Function
 		
 '------------------------------------------------------------------------------------------------------------
 
 		Function displayName(str)
 			Dim tempArray
-			
 			tempArray = Split(str, "\")
 			displayName = (tempArray(Ubound(tempArray)))
 		End Function
@@ -170,7 +132,6 @@
 '------------------------------------------------------------------------------------------------------------
 		Sub onClickLocation(folderPath)
 			Dim Shell
-			
 			Set Shell = CreateObject("WSCript.Shell")
 			Shell.Run(Chr(34) & folderPath & Chr(34))
 			Set Shell = Nothing
@@ -179,13 +140,10 @@
 
 		Sub hitRandom
 			Dim objRandom, randomIndex, wmp
-			
 			Set objRandom = CreateObject("System.Random")
 			randomIndex = objRandom.Next_2(0,videoList.count())
-
 			Set wmp = CreateObject("WMPlayer.OCX")
 			wmp.openPlayer(videoList(randomIndex))
-			
 			Set wmp = Nothing
 			Set objRandom = Nothing
 		End Sub
@@ -193,88 +151,63 @@
 '------------------------------------------------------------------------------------------------------------
 
 		Sub searchTimer(arg)
-		
 			Select Case arg
 				Case "up"
 					If (IsEmpty(timerID)) Then
 						timerID = document.parentWindow.setTimeout("runSearch", 500)
 					End If
-					
 				Case "down"
 					document.parentWindow.clearTimeout(timerID)
 					timerID = Empty
-
 			End Select
-
 		End Sub
 '------------------------------------------------------------------------------------------------------------
 
 		Sub runSearch
 			Dim searchStrArray, searchCount, searchPhrase_temp
-			
 			StartTime = Timer()
 			functionTimer.innerHTML = "Searched in: "
-			
 			document.parentWindow.clearTimeout(timerID)
 			timerID = Empty
 			regexPattern = "a^"
-			
 			searchPhrase_temp = Trim(searchBox.value)
-			
 			If Len(searchPhrase_temp) > 0 Then			
 				If searchPhrase_temp <> searchPhrase Then
 					searchPhrase = searchPhrase_temp
-				
 					regexPattern = ""
-					
 					For Each searchCount In Split(searchPhrase, " ")
 						regexPattern = regexPattern & "(?=.*" & searchCount &")"
 					Next
-					
-					'Msgbox regexPattern
 					filter
-					
 				End If
 			Else
 				paint xmlDoc
 			End If
-			
-			
 		End Sub
 		
 '------------------------------------------------------------------------------------------------------------
 
 		Sub filter
 			Dim objNodeList, objRootNode, objNode, colNodes
-						
 			Set xmlFiltered = CreateObject("Microsoft.XMLDOM")
 			xmlDoc.setProperty "SelectionLanguage","XPath"
 			xmlFiltered.async = False
 			xmlFiltered.loadXML(xmlDoc.DocumentElement.xml)
-			
 			Set objNodeList = xmlFiltered.getElementsByTagName("*")
 			Set objRootNode = objNodeList.item(0)	
-			
 			Set colNodes=xmlFiltered.selectNodes("//*")
 			For Each objNode in colNodes
 				objNode.setAttribute "Filter", "no"
 			Next
-
 			filterNode objRootNode
-			
 			paint xmlFiltered
-			
-			xmlFiltered.Save "Audit_filtered.xml" 
-
-
+			'xmlFiltered.Save "FileList_filtered.xml" 
 		End Sub
 
 '------------------------------------------------------------------------------------------------------------
 		Function filterNode(node)
 			Dim condition, childNodeList, intCount
-			
 			condition = False
-			
 			If node.hasChildNodes() Then
 				Set childNodeList = (node.childNodes)	
 				For intCount = 0 To childNodeList.length - 1
@@ -285,17 +218,13 @@
 					End If
 				Next
 			End If
-			
 			If RegExpTest(node.getAttribute("Name")) Then
 				condition = True
 			End If
-			
 			If condition Then
 				node.setAttribute "Filter", "yes"
 			End If
-
 			filterNode = condition
-			
 		End Function
 
 '------------------------------------------------------------------------------------------------------------
@@ -303,67 +232,49 @@
 		Function RegExpTest(strPhrase)
 			Dim objRegEx, Matches
 			Set objRegEx = New RegExp
-
 			objRegEx.Global = True
 			objRegEx.IgnoreCase = True
 			objRegEx.Pattern = regexPattern
-
 			Set Matches = objRegEx.Execute(strPhrase)
-			
 			If Matches.Count > 0 Then
 				RegExpTest = True
 			Else
 				RegExpTest = False
 			End If
-
-			
 		End Function 
 		
 '------------------------------------------------------------------------------------------------------------
 
 		Sub paint(xml)
 			Dim objNodeList, objRootNode
-			
 			tree.innerHTML = ""
-			
 			Set objNodeList = xml.getElementsByTagName("*")
 			Set objRootNode = objNodeList.item(0)
-			
 			paintNode objRootNode, 0
-			
 			file_count.innerHTML = "<span>" & fileCount & " Files, " & folderCount & " Folders in " & objRootNode.getAttribute("Name") & "</span>"
-		
 			cleanup
-			
 		End Sub
 		
 '------------------------------------------------------------------------------------------------------------		
 		
 		Sub paintNode(node, depth)
-
 			Dim childNodeList, intCount			
-
 			If node.getAttribute("Filter") = "yes" Then
 				format node.getAttribute("Path"), node.nodeName, depth
 			End If
-			
 			Set childNodeList = (node.childNodes)
-			
 			For intCount = 0 To childNodeList.length - 1
 				paintNode childNodeList.Item(intCount), depth + 1
 			Next
-			
 		End Sub
 
 '------------------------------------------------------------------------------------------------------------
 		
 		Sub format (path, mode, depth)
 			Dim content, indent, pointer, styleClass
-						
 			indent = "style= " & Chr(34) & "margin-left:" & depth * 1.4 & "em;" & Chr(34) 
 			styleClass = ""
 			pointer = ""
-
 			Select Case mode
 				Case "FOLDER"
 					styleClass = "class = 'folder"
@@ -404,38 +315,30 @@
 								styleClass = styleClass + "'"
 							End If
 					End Select
-					
-					
 				Case "ROOT"
 					styleClass = "class = 'root'"
 					pointer = "pointer_hidden"
 			End Select
-
 			content = "<div id='wrapper'" & indent & "> <div id='pointer' class='" & pointer & "'></div> <span id='node' "& styleClass &" onClick=" & Chr(34) & "onClickLocation(" & Chr(39) & path & Chr(39) & ")" & Chr(34) & ">" & displayName(path) & "</span> </div>"
 			tree.innerHTML = tree.innerHTML  & content
-		
 		End Sub
 		
 '------------------------------------------------------------------------------------------------------------
 		
 		Function checkFormat(path)
 			Dim item, mode, tempArray, Extension
-			
 			tempArray = Split(path, ".")
 			Extension = (tempArray(Ubound(tempArray)))
-			
 			For Each item In VIDEO_EXT
 				If item = Extension Then
 					mode = "VIDEO_FILE"
 				End If
 			Next
-			
 			For Each item In IMAGE_EXT
 				If item = Extension Then
 					mode = "IMAGE_FILE"
 				End If
 			Next
-			
 			checkFormat = mode
 		End Function
 		
@@ -443,9 +346,7 @@
 		
 		Sub cleanup
 			Dim EndTime
-			'xmlDoc.Save "D:\Desktop\Audit.xml" 
-			'Msgbox "AUDITED" 
-			
+			'xmlDoc.Save "FileList.xml" 
 			EndTime = Timer()
 			functionTimer.innerHTML = functionTimer.innerHTML  & FormatNumber(EndTime - StartTime, 2) & " s"
 		End Sub 
@@ -559,7 +460,6 @@
 		.button:hover {
 			background-color:#f4b301;
 			color:#000;
-			
 		}
 
 		#tree {
@@ -611,10 +511,8 @@
 			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#131212', endColorstr='#141414',GradientType=1 );
 			border-top: 1px solid #252525;
 			padding:5px 0 0 20px;
-			
 			font-size: 8pt;
 			color:#a39999;
-
 		}
 
 		#functionTimer {
@@ -649,7 +547,6 @@
 	<div id=status_bar>
 		<span id="file_count">Little baby cat; so high, so fly.</span>
 		<span id="functionTimer">Started in: </span>
-		
 	</div>
 	
 	</BODY> 
